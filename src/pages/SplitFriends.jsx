@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import StatusBar from '../components/StatusBar';
 import splitBackArrow from '../assets/split-back-arrow.svg';
 import nudgeBreadIcon from '../assets/nudge-bread-icon.png';
+import xIcon from '../assets/x.svg';
 
 const P = { fontFamily: 'Pretendard, sans-serif', fontStyle: 'normal', margin: 0 };
 
@@ -153,6 +154,15 @@ export default function SplitFriends() {
   // 참여자 행 좌표
   const { startX, step } = participantLayout(numSelected);
 
+  // isSingle이 선택되면 목록에서 제외, 나머지는 69px step으로 재배치
+  const visibleGroups = GROUPS.filter(g =>
+    !g.isSingle || !selectedFriends.has(g.members[0].id)
+  );
+  const groupsWithLayout = visibleGroups.map((g, idx) => ({
+    ...g,
+    dynamicLeft: 27 + idx * 69,
+  }));
+
   // 개별 멤버 토글 (추가 → 참여자 행, 해제 → 목록 복귀)
   function toggleMember(id) {
     setSelectedFriends(prev => {
@@ -165,6 +175,12 @@ export default function SplitFriends() {
   const openSheet = (g) => {
     setIsClosing(false);
     setSheetGroup(g);
+    // 모달 열 때 그룹 전원 체크 디폴트
+    setSelectedFriends(prev => {
+      const next = new Set(prev);
+      g.members.forEach(m => next.add(m.id));
+      return next;
+    });
   };
 
   const closeSheet = () => {
@@ -263,15 +279,14 @@ export default function SplitFriends() {
               <img src={m.img} alt={m.name}
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
-            {/* × 제거 버튼 — 14:1674 아바타 우상단 */}
+            {/* × 제거 버튼 — 14:1674 아바타 우상단 (비활성) */}
             <button
-              onClick={() => toggleMember(m.id)}
               style={{
                 position: 'absolute',
                 left: `${avatarLeft + 35}px`, top: '288px',
                 width: '16px', height: '16px',
                 border: 'none', background: 'transparent', padding: 0,
-                cursor: 'pointer', zIndex: 2,
+                cursor: 'default', zIndex: 2, pointerEvents: 'none',
               }}
               aria-label={`${m.name} 제거`}
             >
@@ -313,19 +328,21 @@ export default function SplitFriends() {
 
       {/* 섹션 라벨 */}
       <p style={{ ...P, position: 'absolute', left: '26px', top: '406px', fontWeight: 600, fontSize: '16px', lineHeight: '21.878px', letterSpacing: '-0.0883px', color: '#222', whiteSpace: 'nowrap' }}>
-        비슷한 빵나누기를 했던 친구·모임
+        {numSelected > 0 ? '자주 빵나누기를 했던 친구·모임' : '비슷한 빵나누기를 했던 친구·모임'}
       </p>
 
-      {/* 그룹 카드 — 클릭 시 시트 오픈 (선택 상태 없음) */}
-      {GROUPS.map(g => (
+      {/* 그룹 카드 — G1만 클릭 가능 */}
+      {groupsWithLayout.map(g => (
         <button
           key={g.id}
-          onClick={() => openSheet(g)}
+          onClick={g.id === 'g1' ? () => openSheet(g) : undefined}
           style={{
-            position: 'absolute', left: `${g.left}px`, top: '448px',
+            position: 'absolute', left: `${g.dynamicLeft}px`, top: '448px',
             width: '51px', height: '51px',
             border: 'none', padding: 0, background: 'transparent',
-            cursor: 'pointer', borderRadius: '50%',
+            cursor: g.id === 'g1' ? 'pointer' : 'default',
+            borderRadius: '50%',
+            pointerEvents: g.id === 'g1' ? 'auto' : 'none',
           }}
           aria-label={g.isSingle ? g.singleName : g.pillLabel}
         >
@@ -341,7 +358,7 @@ export default function SplitFriends() {
           ))}
           {g.plusText && (
             <span style={{
-              position: 'absolute', left: `${g.plusLeft - g.left}px`, top: '31px',
+              position: 'absolute', left: `${g.dynamicLeft + (g.plusLeft - g.left) - g.dynamicLeft}px`, top: '31px',
               transform: 'translateX(-50%)',
               fontFamily: 'Pretendard, sans-serif', fontWeight: 800,
               fontSize: '10px', lineHeight: 1, color: '#5c677c', whiteSpace: 'nowrap',
@@ -352,19 +369,18 @@ export default function SplitFriends() {
         </button>
       ))}
 
-      {/* 그룹 레이블 / pill — 클릭 시 시트 오픈 */}
-      {GROUPS.map(g => (
+      {/* 그룹 레이블 / pill — G1 pill만 클릭 가능 */}
+      {groupsWithLayout.map(g => (
         g.isSingle ? (
           <p
             key={`label-${g.id}`}
-            onClick={() => openSheet(g)}
             style={{
               ...P, position: 'absolute',
-              left: `${g.nameCenterX}px`, top: '508px',
+              left: `${g.dynamicLeft + 25.5}px`, top: '508px',
               transform: 'translateX(-50%)',
               fontWeight: 400, fontSize: '14px', lineHeight: '21.976px',
               letterSpacing: '-0.0887px', color: '#222', whiteSpace: 'nowrap',
-              cursor: 'pointer',
+              cursor: 'default', pointerEvents: 'none',
             }}
           >
             {g.singleName}
@@ -372,13 +388,14 @@ export default function SplitFriends() {
         ) : (
           <div
             key={`label-${g.id}`}
-            onClick={() => openSheet(g)}
+            onClick={g.id === 'g1' ? () => openSheet(g) : undefined}
             style={{
-              position: 'absolute', left: `${g.pillLeft}px`, top: '507px',
+              position: 'absolute', left: `${g.dynamicLeft + 5}px`, top: '507px',
               height: '24px', padding: '0 10px',
               background: 'rgba(0,189,101,0.1)', borderRadius: '100px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
+              cursor: g.id === 'g1' ? 'pointer' : 'default',
+              pointerEvents: g.id === 'g1' ? 'auto' : 'none',
             }}
           >
             <span style={{ ...P, fontWeight: 400, fontSize: '14px', lineHeight: '21.976px', letterSpacing: '-0.0887px', color: '#000', whiteSpace: 'nowrap' }}>
@@ -467,6 +484,20 @@ export default function SplitFriends() {
               width: '34.351px', height: '4.771px',
               background: '#d9d9d9', borderRadius: '95.42px',
             }} />
+
+            {/* × 닫기 버튼 */}
+            <button
+              onClick={closeSheet}
+              style={{
+                position: 'absolute', right: '20px', top: '14px',
+                width: '24px', height: '24px',
+                border: 'none', background: 'transparent', padding: 0,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+              aria-label="닫기"
+            >
+              <img src={xIcon} alt="" style={{ width: '16px', height: '16px', display: 'block' }} />
+            </button>
 
             {/* 그룹 썸네일 (top=54) */}
             <div style={{ position: 'absolute', left: '26px', top: '54px', width: '62.059px', height: '62.059px' }}>

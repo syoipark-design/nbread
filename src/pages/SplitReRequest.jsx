@@ -81,9 +81,6 @@ export default function SplitReRequest() {
   const [selectedColor, setSelectedColor] = useState('#bcdeef');
   const [breakingKey, setBreakingKey] = useState(0);
   const [deliveryKey, setDeliveryKey] = useState(0);
-  const [pkgVersion, setPkgVersion] = useState(1);
-  const [typedChars, setTypedChars] = useState(0);
-  const [bodyVisible, setBodyVisible] = useState(false);
   const [styleRandIdx, setStyleRandIdx] = useState({ '기본형': 0, '속보형': 0, '택배형': 0, '사극형': 0, '직접 입력': 0 });
   const [sagukKey, setSagukKey] = useState(0);
   const [sagukTyped, setSagukTyped] = useState('');
@@ -98,40 +95,11 @@ export default function SplitReRequest() {
     });
   }, [selectedStyle]);
 
-  // 택배형 v2 타이핑 시퀀스
-  useEffect(() => {
-    if (selectedStyle !== '택배형' || pkgVersion !== 2) return;
-    const TAG = '[배송조회]';
-    setTypedChars(0);
-    setBodyVisible(false);
-    let i = 0;
-    let timeoutId;
-    const iv = setInterval(() => {
-      i++;
-      setTypedChars(i);
-      if (i >= TAG.length) {
-        clearInterval(iv);
-        timeoutId = setTimeout(() => setBodyVisible(true), 260);
-      }
-    }, 85);
-    return () => { clearInterval(iv); clearTimeout(timeoutId); };
-  }, [deliveryKey, pkgVersion, selectedStyle]);
-
-  // 사극형 suffix '. . ! ! !' 타이핑
-  useEffect(() => {
-    if (selectedStyle !== '사극형') return;
-    setSagukTyped('');
-    let iv, tid;
-    tid = setTimeout(() => {
-      let i = 0;
-      iv = setInterval(() => {
-        i++;
-        setSagukTyped(SAGUK_SUFFIX.slice(0, i));
-        if (i >= SAGUK_SUFFIX.length) clearInterval(iv);
-      }, 120);
-    }, 350);
-    return () => { clearTimeout(tid); clearInterval(iv); };
-  }, [sagukKey, selectedStyle]);
+  const selectedFriend = notReceivedList.find(f => f.id === selectedId) ?? notReceivedList[0];
+  const message =
+    TEMPLATES_MULTI[selectedStyle]?.[styleRandIdx[selectedStyle] ?? 0]?.(
+      selectedFriend?.name ?? '', perPerson
+    ) ?? '';
 
   const handleStyleSelect = (style) => {
     const arr = TEMPLATES_MULTI[style] ?? [];
@@ -143,11 +111,24 @@ export default function SplitReRequest() {
     if (style === '사극형') setSagukKey(k => k + 1);
   };
 
-  const selectedFriend = notReceivedList.find(f => f.id === selectedId) ?? notReceivedList[0];
-  const message =
-    TEMPLATES_MULTI[selectedStyle]?.[styleRandIdx[selectedStyle] ?? 0]?.(
-      selectedFriend?.name ?? '', perPerson
-    ) ?? '';
+  // 사극형 전체 타이핑: 본문 125ms/글자 → 480ms 뜸 → suffix 210ms/글자
+  useEffect(() => {
+    if (selectedStyle !== '사극형') return;
+    setSagukTyped('');
+    const fullText = message + SAGUK_SUFFIX;
+    const bodyLen = message.length;
+    let i = 0;
+    let tid;
+    const typeNext = () => {
+      i++;
+      setSagukTyped(fullText.slice(0, i));
+      if (i >= fullText.length) return;
+      const delay = i === bodyLen ? 480 : i > bodyLen ? 210 : 125;
+      tid = setTimeout(typeNext, delay);
+    };
+    tid = setTimeout(typeNext, 200);
+    return () => clearTimeout(tid);
+  }, [sagukKey, selectedStyle, message]);
 
 
   return (
@@ -216,7 +197,7 @@ export default function SplitReRequest() {
           className="re-request-pill-scroll"
           style={{
             position: 'absolute', top: '18px', left: 0, right: 0, height: '46px',
-            overflowX: 'auto', overflowY: 'hidden',
+            overflowX: 'hidden', overflowY: 'hidden',
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '0 18px', boxSizing: 'border-box',
           }}
@@ -237,7 +218,9 @@ export default function SplitReRequest() {
                   color: isActive ? 'white' : '#222',
                   fontFamily: 'Pretendard, sans-serif',
                   fontWeight: 400, fontSize: '11.9px',
-                  cursor: 'pointer', outline: 'none', whiteSpace: 'nowrap',
+                  cursor: style === '직접 입력' ? 'default' : 'pointer',
+                  pointerEvents: style === '직접 입력' ? 'none' : 'auto',
+                  outline: 'none', whiteSpace: 'nowrap',
                 }}
               >
                 {style}
@@ -262,9 +245,7 @@ export default function SplitReRequest() {
               <span style={{ fontFamily: 'Pretendard, sans-serif', fontSize: 10, fontWeight: 600, color: '#555' }}>출고 대기</span>
             </div>
 
-            {pkgVersion === 1 ? (
-              /* ── v1: 로딩형 — [배송조회] 태그 팝인 → ••• 순차 등장/소멸 → 본문 페이드인 ── */
-              <div>
+            <div>
                 <div style={{ marginBottom: '8px' }}>
                   <span style={{
                     display: 'inline-block',
@@ -291,36 +272,6 @@ export default function SplitReRequest() {
                   {message.replace('[배송조회] ', '')}
                 </p>
               </div>
-            ) : (
-              /* ── v2: 타이핑형 — [배송조회] 한 글자씩 타이핑 → 커서 사라지며 본문 등장 ── */
-              <div>
-                <div style={{ marginBottom: '8px', minHeight: '22px' }}>
-                  {typedChars > 0 && (
-                    <span style={{
-                      display: 'inline-block',
-                      background: '#2c4e7a', color: 'white',
-                      borderRadius: '4px', padding: '1px 6px',
-                      fontFamily: 'Pretendard, sans-serif', fontSize: '12px', fontWeight: 700,
-                    }}>{('[배송조회]').slice(0, typedChars)}</span>
-                  )}
-                  {typedChars < '[배송조회]'.length && (
-                    <span style={{
-                      fontFamily: 'Pretendard, sans-serif', fontSize: '13px', color: '#2c4e7a',
-                      marginLeft: '2px', fontWeight: 700,
-                      animation: 'pkg-cursor-blink 0.5s ease-in-out infinite',
-                    }}>|</span>
-                  )}
-                </div>
-                {bodyVisible && (
-                  <p style={{
-                    ...P, fontWeight: 600, fontSize: '17px', lineHeight: '25px', color: '#222', whiteSpace: 'pre-wrap',
-                    animation: 'pkg-body-appear 0.35s ease-out',
-                  }}>
-                    {message.replace('[배송조회] ', '')}
-                  </p>
-                )}
-              </div>
-            )}
           </div>
         ) : (() => {
             const brMatch = selectedStyle === '속보형'
@@ -361,7 +312,7 @@ export default function SplitReRequest() {
                     {brBody}
                   </>
                 ) : selectedStyle === '사극형' ? (
-                  `${message}${sagukTyped}`
+                  sagukTyped
                 ) : message}
               </p>
             );
@@ -391,32 +342,6 @@ export default function SplitReRequest() {
           />
         ))}
       </div>
-
-      {/* 택배형 버전 토글 — 택배형 선택 시에만 표시 */}
-      {selectedStyle === '택배형' && (
-        <div style={{ position: 'absolute', top: '645px', left: '22px', right: '22px', display: 'flex', gap: '8px' }}>
-          {[{ label: '로딩형', v: 1 }, { label: '타이핑형', v: 2 }].map(({ label, v }) => {
-            const active = pkgVersion === v;
-            return (
-              <button
-                key={v}
-                onClick={() => { setPkgVersion(v); setDeliveryKey(k => k + 1); }}
-                style={{
-                  flex: 1, height: '34px', borderRadius: '17px',
-                  border: active ? '1.5px solid #222' : '1.5px solid #ccc',
-                  background: active ? '#222' : 'white',
-                  color: active ? 'white' : '#444',
-                  fontFamily: 'Pretendard, sans-serif',
-                  fontSize: '13px', fontWeight: 500,
-                  cursor: 'pointer', outline: 'none',
-                }}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-      )}
 
       {/* CTA */}
       <div style={{ position: 'absolute', left: 0, bottom: 0, width: '375px', height: '113.55px', background: 'white', zIndex: 10 }}>
