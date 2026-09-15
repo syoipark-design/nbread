@@ -12,7 +12,6 @@ const P = { fontFamily: 'Pretendard, sans-serif', fontStyle: 'normal', margin: 0
 const fmt = v => v.toLocaleString('ko-KR');
 
 const STYLE_LIST = ['기본형', '속보형', '택배형', '사극형', '직접 입력'];
-const PILL_LEFTS = [40, 109, 178, 247, 316];
 
 const TEMPLATES_MULTI = {
   '기본형': [
@@ -212,36 +211,39 @@ export default function SplitReRequest() {
 
       {/* 메시지 카드 — overflow:hidden으로 pill 탭을 카드 모서리에서 클리핑 */}
       <div style={{ position: 'absolute', left: '22px', top: '307px', width: '331px', height: '238px', background: selectedColor, borderRadius: '22px', overflow: 'hidden' }}>
-        {/* 스타일 pill 가로스크롤 — 카드 내부 top=18 (Figma mask group top=325, card top=307, 325-307=18) */}
+        {/* 스타일 pill 가로스크롤 — 카드 내부 top=18 / 좌우 패딩 동일(18px) */}
         <div
           className="re-request-pill-scroll"
-          style={{ position: 'absolute', top: '18px', left: 0, right: 0, height: '46px', overflowX: 'auto', overflowY: 'hidden', scrollbarWidth: 'none' }}
+          style={{
+            position: 'absolute', top: '18px', left: 0, right: 0, height: '46px',
+            overflowX: 'auto', overflowY: 'hidden',
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '0 18px', boxSizing: 'border-box',
+          }}
         >
-          <div style={{ position: 'relative', width: `${PILL_LEFTS[4] - 22 + 120}px`, height: '46px' }}>
-            {STYLE_LIST.map((style, i) => {
-              const isActive = selectedStyle === style;
-              return (
-                <button
-                  key={style}
-                  ref={el => { pillRefs.current[style] = el; }}
-                  onClick={() => handleStyleSelect(style)}
-                  style={{
-                    position: 'absolute', left: `${PILL_LEFTS[i] - 22}px`, top: '5px',
-                    padding: '0 15px', height: '28px',
-                    borderRadius: '100px',
-                    border: `1px solid ${isActive ? '#222' : '#a1bfce'}`,
-                    background: isActive ? '#222' : 'transparent',
-                    color: isActive ? 'white' : '#222',
-                    fontFamily: 'Pretendard, sans-serif',
-                    fontWeight: 400, fontSize: '11.9px',
-                    cursor: 'pointer', outline: 'none', whiteSpace: 'nowrap',
-                  }}
-                >
-                  {style}
-                </button>
-              );
-            })}
-          </div>
+          {STYLE_LIST.map((style) => {
+            const isActive = selectedStyle === style;
+            return (
+              <button
+                key={style}
+                ref={el => { pillRefs.current[style] = el; }}
+                onClick={() => handleStyleSelect(style)}
+                style={{
+                  flexShrink: 0,
+                  padding: '0 15px', height: '28px',
+                  borderRadius: '100px',
+                  border: `1px solid ${isActive ? '#222' : '#a1bfce'}`,
+                  background: isActive ? '#222' : 'transparent',
+                  color: isActive ? 'white' : '#222',
+                  fontFamily: 'Pretendard, sans-serif',
+                  fontWeight: 400, fontSize: '11.9px',
+                  cursor: 'pointer', outline: 'none', whiteSpace: 'nowrap',
+                }}
+              >
+                {style}
+              </button>
+            );
+          })}
         </div>
 
         {/* 메시지 콘텐츠 — 유형별 분기 */}
