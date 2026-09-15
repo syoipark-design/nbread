@@ -414,7 +414,9 @@ export default function SplitFriends() {
       <div style={{ position: 'absolute', left: 0, top: '698px', width: '375px', height: '113.55px', background: 'white' }} />
       <button
         disabled={!isActive}
-        onClick={() => {}}
+        onClick={() => navigate('/split/confirm', {
+          state: { formattedAmount: amount, selectedFriends: selectedMembersList }
+        })}
         style={{
           position: 'absolute',
           left: 'calc(50% - 171.278px)', top: '718.99px',
