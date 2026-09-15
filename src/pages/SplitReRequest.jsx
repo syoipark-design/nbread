@@ -13,6 +13,13 @@ const fmt = v => v.toLocaleString('ko-KR');
 
 const STYLE_LIST = ['기본형', '속보형', '택배형', '사극형', '직접 입력'];
 
+// 이름 마지막 글자 받침 여부로 아/야 선택
+// (charCode - 0xAC00) % 28 === 0 → 받침 없음 → "야"
+function josa(name) {
+  const code = name.charCodeAt(name.length - 1) - 0xAC00;
+  return code >= 0 && code % 28 !== 0 ? '아' : '야';
+}
+
 const TEMPLATES_MULTI = {
   '기본형': [
     (name, amount) => `${name}님, ${fmt(amount)}원 정산 부탁드려요`,
@@ -32,9 +39,9 @@ const TEMPLATES_MULTI = {
     (name, amount) => `[배송조회] ${fmt(amount)}원, 발송지에서 움직이지 않고 있어요 📦`,
   ],
   '사극형': [
-    (name, amount) => `${name}아, 네 빚 ${fmt(amount)}원을 어이 아직 갚지 아니하였느냐`,
+    (name, amount) => `${name}${josa(name)}, 네 빚 ${fmt(amount)}원을 어이 아직 갚지 아니하였느냐`,
     (name, amount) => `여봐라, ${name}에게 일러라. ${fmt(amount)}원 송금이 늦으면 곳간이 빈다 하였느니라`,
-    (name, amount) => `${name}아… 과인이 ${fmt(amount)}원을 기다린 지 오래이니, 어서 봉투를 대령하라`,
+    (name, amount) => `${name}${josa(name)}… 과인이 ${fmt(amount)}원을 기다린 지 오래이니, 어서 봉투를 대령하라`,
     (name, amount) => `${name}님, 부디 ${fmt(amount)}원을 어서 보내주시옵소서`,
     (name, amount) => `${name}님, ${fmt(amount)}원 어서 갚아주시길 청하옵니다`,
   ],
@@ -101,6 +108,11 @@ export default function SplitReRequest() {
       selectedFriend?.name ?? '', perPerson
     ) ?? '';
 
+  // 사극형에서만 "원" → "냥"
+  const sagukMessage = selectedStyle === '사극형'
+    ? message.replace(/원/g, '냥')
+    : message;
+
   const handleStyleSelect = (style) => {
     const arr = TEMPLATES_MULTI[style] ?? [];
     const newIdx = arr.length > 1 ? Math.floor(Math.random() * arr.length) : 0;
@@ -115,8 +127,8 @@ export default function SplitReRequest() {
   useEffect(() => {
     if (selectedStyle !== '사극형') return;
     setSagukTyped('');
-    const fullText = message + SAGUK_SUFFIX;
-    const bodyLen = message.length;
+    const fullText = sagukMessage + SAGUK_SUFFIX;
+    const bodyLen = sagukMessage.length;
     let i = 0;
     let tid;
     const typeNext = () => {
@@ -128,7 +140,7 @@ export default function SplitReRequest() {
     };
     tid = setTimeout(typeNext, 200);
     return () => clearTimeout(tid);
-  }, [sagukKey, selectedStyle, message]);
+  }, [sagukKey, selectedStyle, sagukMessage]);
 
 
   return (
