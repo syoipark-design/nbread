@@ -120,6 +120,9 @@ const GROUPS = [
 // 전체 멤버 플랫 목록 (selectedFriends 조회용)
 const ALL_MEMBERS = GROUPS.flatMap(g => g.members);
 
+// 라우트 이동 간 선택 상태 보존 (localStorage 금지 → 모듈 싱글톤)
+let persistedSelectedFriends = new Set();
+
 // 14:1674 참여자 행 배치 공식
 // n명 선택 시: startX = 162 - 32*n, step = 64px
 // 나(빵장) left = startX + 64*n
@@ -134,8 +137,8 @@ export default function SplitFriends() {
   const location = useLocation();
   const amount = location.state?.formattedAmount ?? '224,000';
 
-  // 단일 소스: 선택된 멤버 ID Set
-  const [selectedFriends, setSelectedFriends] = useState(new Set());
+  // 단일 소스: 선택된 멤버 ID Set (뒤로가기 시 복원)
+  const [selectedFriends, setSelectedFriends] = useState(() => new Set(persistedSelectedFriends));
 
   // 바텀시트
   const [sheetGroup, setSheetGroup] = useState(null);
@@ -154,9 +157,9 @@ export default function SplitFriends() {
   // 참여자 행 좌표
   const { startX, step } = participantLayout(numSelected);
 
-  // isSingle이 선택되면 목록에서 제외, 나머지는 69px step으로 재배치
+  // 전원 선택된 그룹은 목록에서 제외, 나머지는 69px step으로 재배치
   const visibleGroups = GROUPS.filter(g =>
-    !g.isSingle || !selectedFriends.has(g.members[0].id)
+    !g.members.every(m => selectedFriends.has(m.id))
   );
   const groupsWithLayout = visibleGroups.map((g, idx) => ({
     ...g,
@@ -168,6 +171,7 @@ export default function SplitFriends() {
     setSelectedFriends(prev => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id); else next.add(id);
+      persistedSelectedFriends = next;
       return next;
     });
   }
@@ -179,6 +183,7 @@ export default function SplitFriends() {
     setSelectedFriends(prev => {
       const next = new Set(prev);
       g.members.forEach(m => next.add(m.id));
+      persistedSelectedFriends = next;
       return next;
     });
   };
@@ -279,18 +284,19 @@ export default function SplitFriends() {
               <img src={m.img} alt={m.name}
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
-            {/* × 제거 버튼 — 14:1674 아바타 우상단 (비활성) */}
+            {/* × 제거 버튼 — 14:1674 아바타 우상단 */}
             <button
+              onClick={() => toggleMember(m.id)}
               style={{
                 position: 'absolute',
                 left: `${avatarLeft + 35}px`, top: '288px',
                 width: '16px', height: '16px',
                 border: 'none', background: 'transparent', padding: 0,
-                cursor: 'default', zIndex: 2, pointerEvents: 'none',
+                cursor: 'pointer', zIndex: 2,
               }}
               aria-label={`${m.name} 제거`}
             >
-              <img src={IMG_REMOVE_BTN} alt="제거"
+              <img src={xIcon} alt="제거"
                 style={{ width: '16px', height: '16px', display: 'block' }} />
             </button>
             {/* 이름 */}
@@ -484,20 +490,6 @@ export default function SplitFriends() {
               width: '34.351px', height: '4.771px',
               background: '#d9d9d9', borderRadius: '95.42px',
             }} />
-
-            {/* × 닫기 버튼 */}
-            <button
-              onClick={closeSheet}
-              style={{
-                position: 'absolute', right: '20px', top: '14px',
-                width: '24px', height: '24px',
-                border: 'none', background: 'transparent', padding: 0,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-              aria-label="닫기"
-            >
-              <img src={xIcon} alt="" style={{ width: '16px', height: '16px', display: 'block' }} />
-            </button>
 
             {/* 그룹 썸네일 (top=54) */}
             <div style={{ position: 'absolute', left: '26px', top: '54px', width: '62.059px', height: '62.059px' }}>

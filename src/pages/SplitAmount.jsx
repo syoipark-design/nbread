@@ -146,9 +146,14 @@ export default function SplitAmount() {
           left: 'calc(50% - 83px)', top: '296px', width: '166px', height: '42px',
           border: '0.8px solid #dfdfdf', borderRadius: '10px',
           paddingLeft: '18px', paddingRight: '15px',
-          zIndex: 12,
+          zIndex: 12, cursor: 'pointer', background: 'transparent',
+          transition: 'background 0.15s ease, transform 0.1s ease',
         }}
         onClick={() => setShowSheet(true)}
+        onMouseEnter={e => { e.currentTarget.style.background = '#f5f5f5'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none'; }}
+        onMouseDown={e => { e.currentTarget.style.background = '#ebebeb'; e.currentTarget.style.transform = 'scale(0.97)'; }}
+        onMouseUp={e => { e.currentTarget.style.background = '#f5f5f5'; e.currentTarget.style.transform = 'none'; }}
       >
         <div className="relative shrink-0 size-[7.5px]">
           <div className="absolute inset-[-8%]">
