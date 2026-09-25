@@ -5,7 +5,7 @@ import nofriendIcon from '../assets/nofriend.svg';
 import breadIcon from '../assets/bread.svg';
 import nudgeBreadIcon from '../assets/nudge-bread-icon.png';
 
-import IMG_ME_BG from '../assets/me-avatar-bg.svg';
+import IMG_ME_BG from '../assets/bbangjang.png';
 
 const P = {
   fontFamily: 'Pretendard, sans-serif',

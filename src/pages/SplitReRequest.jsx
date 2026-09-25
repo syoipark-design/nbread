@@ -5,7 +5,7 @@ import splitBackArrow from '../assets/split-back-arrow.svg';
 import nofriendIcon from '../assets/nofriend.svg';
 import nudgeBreadIcon from '../assets/nudge-bread-icon.png';
 
-import IMG_ME_BG from '../assets/me-avatar-bg.svg';
+import IMG_ME_BG from '../assets/bbangjang.png';
 import IMG_SHARE from '../assets/share-icon.svg';
 
 const P = { fontFamily: 'Pretendard, sans-serif', fontStyle: 'normal', margin: 0 };

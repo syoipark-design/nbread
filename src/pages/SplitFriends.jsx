@@ -4,36 +4,34 @@ import StatusBar from '../components/StatusBar';
 import splitBackArrow from '../assets/split-back-arrow.svg';
 import nudgeBreadIcon from '../assets/nudge-bread-icon.png';
 import xIcon from '../assets/x.svg';
-import IMG_ME_BG from '../assets/me-avatar-bg.svg';
+import IMG_ME_BG from '../assets/bbangjang.png';
 import IMG_GROUP_BG from '../assets/group-card-bg.svg';
-import IMG_JANGHOYOUNG from '../assets/avatar-janghoyoung.svg';
-import IMG_G1_A from '../assets/avatar-yuna.svg';
-import IMG_G1_B from '../assets/avatar-sujin.svg';
-import IMG_G1_C from '../assets/avatar-yubin.svg';
-import IMG_G2_A from '../assets/avatar-jimin.svg';
-import IMG_G2_B from '../assets/avatar-haeun.svg';
-import IMG_G2_C from '../assets/avatar-seoyeon.svg';
-import IMG_G2_D from '../assets/avatar-minjun.svg';
-import IMG_G4_A from '../assets/avatar-junhyuk.svg';
-import IMG_G4_B from '../assets/avatar-yerin.svg';
-import IMG_G4_C from '../assets/avatar-sungmin.svg';
-import IMG_G4_D from '../assets/avatar-sohee.svg';
+import IMG_JANGHOYOUNG from '../assets/jhy.svg';
+import IMG_G1_A from '../assets/jyn.svg';
+import IMG_G1_B from '../assets/csb.svg';
+import IMG_G1_C from '../assets/eeb.svg';
+import IMG_G2_A from '../assets/1.svg';
+import IMG_G2_B from '../assets/2.svg';
+import IMG_G2_C from '../assets/3.svg';
+import IMG_G2_D from '../assets/4.svg';
+import IMG_G4_A from '../assets/a.svg';
+import IMG_G4_B from '../assets/b2.svg';
+import IMG_G4_C from '../assets/c.svg';
+import IMG_G4_D from '../assets/d.svg';
 import IMG_KAKAO_BG from '../assets/kakao-btn-bg.svg';
 import IMG_KAKAO_LOGO from '../assets/katalk.svg';
-import IMG_PLUS_BG from '../assets/plus-btn-bg.svg';
-import IMG_PLUS_ICON from '../assets/x.svg';
+import IMG_PLUS_BG from '../assets/plus.svg';
 import IMG_SHEET_GROUP_BG from '../assets/sheet-group-bg.svg';
-import IMG_SHEET_INNER_A from '../assets/avatar-yuna.svg';
-import IMG_SHEET_INNER_B from '../assets/avatar-sujin.svg';
-import IMG_SHEET_INNER_C from '../assets/avatar-yubin.svg';
-import IMG_SHEET_M1 from '../assets/avatar-yuna.svg';
-import IMG_SHEET_M2 from '../assets/avatar-sujin.svg';
-import IMG_SHEET_M3 from '../assets/avatar-yubin.svg';
+import IMG_SHEET_INNER_A from '../assets/jyn.svg';
+import IMG_SHEET_INNER_B from '../assets/csb.svg';
+import IMG_SHEET_INNER_C from '../assets/eeb.svg';
+import IMG_SHEET_M1 from '../assets/jyn.svg';
+import IMG_SHEET_M2 from '../assets/csb.svg';
+import IMG_SHEET_M3 from '../assets/eeb.svg';
 import IMG_CHECK_ON from '../assets/sheet-check-selected.svg';
 import IMG_CHECK_OFF from '../assets/sheet-check-unselected.svg';
 import IMG_INSIGHT_ICON from '../assets/insight-icon.svg';
 import IMG_EDIT from '../assets/edit-icon.svg';
-import IMG_REMOVE_BTN from '../assets/x.svg';
 
 const P = { fontFamily: 'Pretendard, sans-serif', fontStyle: 'normal', margin: 0 };
 
@@ -64,9 +62,8 @@ const GROUPS = [
       { img: IMG_G2_C, rl: 7,     rt: 27.22, size: 17.78 },
       { img: IMG_G2_D, rl: 26.87, rt: 27.22, size: 17.78 },
     ],
-    plusText: '+3', plusLeft: 131.5,
     insight: '한 달에 두 번 이상 정산했어요.',
-    sheetInnerAvatars: [IMG_G2_A, IMG_G2_B, IMG_G2_C, IMG_G2_D],
+    sheetInnerAvatars: [IMG_G2_A, IMG_G2_B, IMG_G2_C],
     members: [
       { id: 'm4', name: '박지민', img: IMG_G2_A },
       { id: 'm5', name: '김하은', img: IMG_G2_B },
@@ -351,16 +348,6 @@ export default function SplitFriends() {
               }}
             />
           ))}
-          {g.plusText && (
-            <span style={{
-              position: 'absolute', left: `${g.dynamicLeft + (g.plusLeft - g.left) - g.dynamicLeft}px`, top: '31px',
-              transform: 'translateX(-50%)',
-              fontFamily: 'Pretendard, sans-serif', fontWeight: 800,
-              fontSize: '10px', lineHeight: 1, color: '#5c677c', whiteSpace: 'nowrap',
-            }}>
-              {g.plusText}
-            </span>
-          )}
         </button>
       ))}
 
@@ -413,10 +400,7 @@ export default function SplitFriends() {
 
       {/* 연락처 없는 친구 추가 — 비활성 */}
       <div style={{ position: 'absolute', left: '26px', top: '643px', width: '41px', height: '41px' }}>
-        <img src={IMG_PLUS_BG} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
-        <div style={{ position: 'absolute', left: '13px', top: '13px', width: '14px', height: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src={IMG_PLUS_ICON} alt="" style={{ display: 'block', width: '9.899px', height: '9.899px', transform: 'rotate(45deg)' }} />
-        </div>
+        <img src={IMG_PLUS_BG} alt="" style={{ width: '41px', height: '41px', display: 'block' }} />
       </div>
       <p style={{ ...P, position: 'absolute', left: '147.5px', top: '650px', transform: 'translateX(-50%)', fontWeight: 400, fontSize: '16.138px', lineHeight: '26.84px', letterSpacing: '-0.1083px', color: '#222', whiteSpace: 'nowrap' }}>
         연락처 없는 친구 추가
