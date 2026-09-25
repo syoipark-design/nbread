@@ -5,7 +5,7 @@ import nofriendIcon from '../assets/nofriend.svg';
 import breadIcon from '../assets/bread.svg';
 import nudgeBreadIcon from '../assets/nudge-bread-icon.png';
 
-const IMG_ME_BG = 'https://www.figma.com/api/mcp/asset/b4e01d5d-1ac3-4a83-b0e0-37a6494e636e.svg';
+import IMG_ME_BG from '../assets/me-avatar-bg.svg';
 
 const P = {
   fontFamily: 'Pretendard, sans-serif',

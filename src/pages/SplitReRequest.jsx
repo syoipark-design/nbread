@@ -5,8 +5,8 @@ import splitBackArrow from '../assets/split-back-arrow.svg';
 import nofriendIcon from '../assets/nofriend.svg';
 import nudgeBreadIcon from '../assets/nudge-bread-icon.png';
 
-const IMG_ME_BG = 'https://www.figma.com/api/mcp/asset/b4e01d5d-1ac3-4a83-b0e0-37a6494e636e.svg';
-const IMG_SHARE = 'https://www.figma.com/api/mcp/asset/d868db47-28d4-4039-b78a-e904f859f4a1.svg';
+import IMG_ME_BG from '../assets/me-avatar-bg.svg';
+import IMG_SHARE from '../assets/share-icon.svg';
 
 const P = { fontFamily: 'Pretendard, sans-serif', fontStyle: 'normal', margin: 0 };
 const fmt = v => v.toLocaleString('ko-KR');

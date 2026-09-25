@@ -4,49 +4,38 @@ import StatusBar from '../components/StatusBar';
 import splitBackArrow from '../assets/split-back-arrow.svg';
 import nudgeBreadIcon from '../assets/nudge-bread-icon.png';
 import xIcon from '../assets/x.svg';
+import IMG_ME_BG from '../assets/me-avatar-bg.svg';
+import IMG_GROUP_BG from '../assets/group-card-bg.svg';
+import IMG_JANGHOYOUNG from '../assets/avatar-janghoyoung.svg';
+import IMG_G1_A from '../assets/avatar-yuna.svg';
+import IMG_G1_B from '../assets/avatar-sujin.svg';
+import IMG_G1_C from '../assets/avatar-yubin.svg';
+import IMG_G2_A from '../assets/avatar-jimin.svg';
+import IMG_G2_B from '../assets/avatar-haeun.svg';
+import IMG_G2_C from '../assets/avatar-seoyeon.svg';
+import IMG_G2_D from '../assets/avatar-minjun.svg';
+import IMG_G4_A from '../assets/avatar-junhyuk.svg';
+import IMG_G4_B from '../assets/avatar-yerin.svg';
+import IMG_G4_C from '../assets/avatar-sungmin.svg';
+import IMG_G4_D from '../assets/avatar-sohee.svg';
+import IMG_KAKAO_BG from '../assets/kakao-btn-bg.svg';
+import IMG_KAKAO_LOGO from '../assets/katalk.svg';
+import IMG_PLUS_BG from '../assets/plus-btn-bg.svg';
+import IMG_PLUS_ICON from '../assets/x.svg';
+import IMG_SHEET_GROUP_BG from '../assets/sheet-group-bg.svg';
+import IMG_SHEET_INNER_A from '../assets/avatar-yuna.svg';
+import IMG_SHEET_INNER_B from '../assets/avatar-sujin.svg';
+import IMG_SHEET_INNER_C from '../assets/avatar-yubin.svg';
+import IMG_SHEET_M1 from '../assets/avatar-yuna.svg';
+import IMG_SHEET_M2 from '../assets/avatar-sujin.svg';
+import IMG_SHEET_M3 from '../assets/avatar-yubin.svg';
+import IMG_CHECK_ON from '../assets/sheet-check-selected.svg';
+import IMG_CHECK_OFF from '../assets/sheet-check-unselected.svg';
+import IMG_INSIGHT_ICON from '../assets/insight-icon.svg';
+import IMG_EDIT from '../assets/edit-icon.svg';
+import IMG_REMOVE_BTN from '../assets/x.svg';
 
 const P = { fontFamily: 'Pretendard, sans-serif', fontStyle: 'normal', margin: 0 };
-
-// ── 그룹 카드 이미지 (51:2277) ─────────────────────────────────────────
-const IMG_ME_BG       = 'https://www.figma.com/api/mcp/asset/ba183758-8aee-467e-80e6-bb4bd9cd6bf5.svg';
-const IMG_GROUP_BG    = 'https://www.figma.com/api/mcp/asset/592ec4af-8d6d-4c9e-909a-bd6d404193d3.svg';
-const IMG_JANGHOYOUNG = 'https://www.figma.com/api/mcp/asset/0992e625-3db7-4bd9-962c-383383e7c1bd.png';
-
-const IMG_G1_A = 'https://www.figma.com/api/mcp/asset/d22c70c7-b4ff-4b58-ad81-b58a4a91bfc6.png';
-const IMG_G1_B = 'https://www.figma.com/api/mcp/asset/de9d0b3f-43c7-4cf7-9acc-040a14e7f8e9.png';
-const IMG_G1_C = 'https://www.figma.com/api/mcp/asset/1c69fff7-0998-4b9d-b72f-98f4d0c5cdf9.png';
-
-const IMG_G2_A = 'https://www.figma.com/api/mcp/asset/9027d64a-b929-49c6-8d30-f3a7070ef3f1.png';
-const IMG_G2_B = 'https://www.figma.com/api/mcp/asset/0b7ffb4a-93e9-4ced-9421-b62c7119d928.png';
-const IMG_G2_C = 'https://www.figma.com/api/mcp/asset/7b079d5f-3138-4b05-8b62-c68b172c0945.png';
-const IMG_G2_D = 'https://www.figma.com/api/mcp/asset/9a0c2395-9164-4817-807e-38924d6188eb.png';
-
-const IMG_G4_A = 'https://www.figma.com/api/mcp/asset/e255c113-3ffa-49b0-90af-52dfd4a0df5c.png';
-const IMG_G4_B = 'https://www.figma.com/api/mcp/asset/906eec30-4f0f-424a-b6f2-d5281f15efce.png';
-const IMG_G4_C = 'https://www.figma.com/api/mcp/asset/abc68cbe-ea9e-40e8-880e-36eebe6f92bc.png';
-const IMG_G4_D = 'https://www.figma.com/api/mcp/asset/c15f6c9e-af58-4b1e-a190-5635bccae129.png';
-
-const IMG_KAKAO_BG   = 'https://www.figma.com/api/mcp/asset/c195fba5-5a13-4ece-9afb-bd11e7355b23.svg';
-const IMG_KAKAO_LOGO = 'https://www.figma.com/api/mcp/asset/a4b3453b-3f5c-4b4b-919a-ebf683ccf317.png';
-const IMG_PLUS_BG    = 'https://www.figma.com/api/mcp/asset/b687197d-da74-4f93-9b81-6e5dc301db08.svg';
-const IMG_PLUS_ICON  = 'https://www.figma.com/api/mcp/asset/457bc331-5046-44d0-8b9e-0fd29f16cd38.svg';
-
-// ── 바텀시트 이미지 (51:2349 원본 재확인) ──────────────────────────────
-const IMG_SHEET_GROUP_BG = 'https://www.figma.com/api/mcp/asset/0b5ef831-67e2-4985-9fe9-bf4b1532a592.svg';
-const IMG_SHEET_INNER_A  = 'https://www.figma.com/api/mcp/asset/c0a85aa5-baed-42ed-b227-e06992b57c1e.png';
-const IMG_SHEET_INNER_B  = 'https://www.figma.com/api/mcp/asset/6f3223c3-b003-4316-9574-cbd633492afa.png';
-const IMG_SHEET_INNER_C  = 'https://www.figma.com/api/mcp/asset/e7a37cf1-f90c-42dd-90de-8fd4eca17055.png';
-const IMG_SHEET_M1       = 'https://www.figma.com/api/mcp/asset/c84a0911-513f-4584-b0d5-47faa35028fc.png';
-const IMG_SHEET_M2       = 'https://www.figma.com/api/mcp/asset/ce004205-2fc2-4091-8bfe-2a8ac19348e2.png';
-const IMG_SHEET_M3       = 'https://www.figma.com/api/mcp/asset/f02775c3-c2a3-426f-8bf7-d27d1bd0a068.png';
-// 선택 ON(노랑 체크) / OFF(회색 빈 원) — imgGroup2085665349 / imgGroup2085665351
-const IMG_CHECK_ON       = 'https://www.figma.com/api/mcp/asset/8c2eaa83-f678-4fb5-9cff-993331830de3.svg';
-const IMG_CHECK_OFF      = 'https://www.figma.com/api/mcp/asset/28a9facc-2b0b-4eb9-aebb-c79b67b223ff.svg';
-const IMG_INSIGHT_ICON   = 'https://www.figma.com/api/mcp/asset/4d26de65-e280-46ca-9b92-403250e4fc57.png';
-const IMG_EDIT           = 'https://www.figma.com/api/mcp/asset/3900edf5-8aa9-46e5-8f9a-7af54db6f666.svg';
-
-// × 제거 버튼 (14:1674 기준)
-const IMG_REMOVE_BTN = 'https://www.figma.com/api/mcp/asset/d6d4d87f-1147-4741-8815-f482e001c4c8.svg';
 
 // ── 그룹 데이터 ────────────────────────────────────────────────────────
 const GROUPS = [
